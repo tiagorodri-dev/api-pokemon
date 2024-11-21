@@ -1,0 +1,7 @@
+.card-focusable:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    border: 2px solid #007bff;
+    border-radius: 0.5rem;
+    padding: 0;
+  }

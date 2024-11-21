@@ -2,6 +2,9 @@ import { useState, useRef } from "react";
 import { usePokemon } from "../hooks/usePokemon";
 import SearchBar from "../components/SearchBar";
 import PokemonCard from "../components/pokemonCard";
+import pokemon from "../assets/logo.webp";
+import "./style.css";
+import { BsExclamationCircle } from "react-icons/bs";
 
 const PokemonList = () => {
   const { pokemons, loading, error } = usePokemon(
@@ -44,14 +47,34 @@ const PokemonList = () => {
   if (error) return <p>Erro ao carregar os dados: {error}</p>;
 
   return (
-    <div onKeyDown={handleKeyDown} className="container mt-4">
+    <div onKeyDown={handleKeyDown} className="container p-4">
+      <div className="d-flex align-items-center justify-content-center">
+        <img src={pokemon} alt="Logo Pokéapi" width={200} />
+      </div>
+
       <SearchBar search={search} setSearch={setSearch} />
       <div ref={listRef} className="row gy-4 mt-3">
-        {filteredPokemons.map((pokemon) => (
-          <div key={pokemon.id} className="pokemon-item col-12 col-sm-6 col-md-4 col-lg-3" tabIndex={0} >
-            <PokemonCard pokemon={pokemon} />
+        {filteredPokemons.length > 0 ? (
+          filteredPokemons.map((pokemon) => (
+            <div
+              key={pokemon.id}
+              className="pokemon-item col-12 col-sm-6 col-md-4 col-lg-3 card-focusable"
+              tabIndex={0}
+            >
+              <PokemonCard pokemon={pokemon} />
+            </div>
+          ))
+        ) : (
+          <div className="col-12 text-center">
+            <p
+              className="d-flex align-items-center justify-content-center fs-5"
+              style={{ fontSize: "18px", color: "#555" }}
+            >
+              <BsExclamationCircle size={20} className="me-2" />
+              Pokémon não encontrado!
+            </p>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
