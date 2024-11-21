@@ -1,17 +1,29 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { usePokemon } from "../hooks/usePokemon";
 import SearchBar from "../components/SearchBar";
 import PokemonCard from "../components/pokemonCard";
 import pokemon from "../assets/logo.webp";
 import "./style.css";
-import { BsExclamationCircle } from "react-icons/bs";
+import { BsExclamationCircle, BsMoon, BsSun } from "react-icons/bs";
 
 const PokemonList = () => {
   const { pokemons, loading, error } = usePokemon(
     "https://pokeapi.co/api/v2/pokemon?limit=20"
   );
   const [search, setSearch] = useState("");
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const listRef = useRef(null);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme); // Salva a escolha no localStorage
+  };
+
+  useEffect(() => {
+    document.body.classList.remove("light-mode", "dark-mode");
+    document.body.classList.add(`${theme}-mode`);
+  }, [theme]);
 
   const filteredPokemons = pokemons.filter((pokemon) =>
     pokemon.name.toLowerCase().includes(search.toLowerCase())
@@ -51,6 +63,14 @@ const PokemonList = () => {
       <div className="d-flex align-items-center justify-content-center">
         <img src={pokemon} alt="Logo Pokéapi" width={200} />
       </div>
+
+      <button onClick={toggleTheme} className="btn-theme-toggle">
+      {theme === "light" ? (
+          <BsMoon size={24} color="#000000"/>
+        ) : (
+          <BsSun size={24} />
+        )}
+      </button>
 
       <SearchBar search={search} setSearch={setSearch} />
       <div ref={listRef} className="row gy-4 mt-3">
